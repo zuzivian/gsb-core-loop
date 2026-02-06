@@ -1,0 +1,72 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Goal {
+  id          String       @id @default(cuid())
+  title       String
+  category    String
+  description String?
+  status      String       @default("ACTIVE")
+  signals     Signal[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Signal {
+  id           String   @id @default(cuid())
+  goalId       String
+  goal         Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  title        String
+  weeklyTarget Int
+  active       Boolean  @default(true)
+  actions      Action[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Action {
+  id         String   @id @default(cuid())
+  signalId   String
+  signal     Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  happenedAt DateTime @default(now())
+  title      String
+  notes      String?
+  createdAt  DateTime @default(now())
+}
+
+model Person {
+  id          String  @id @default(cuid())
+  name        String
+  contextTag  String?
+  lastTouchAt DateTime?
+  nextStep    String?
+  notes       String?
+  touches     Touch[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Touch {
+  id        String   @id @default(cuid())
+  personId  String
+  person    Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  touchedAt DateTime @default(now())
+  summary   String
+  createdAt DateTime @default(now())
+}
+
+model WeeklyReview {
+  id          String   @id @default(cuid())
+  weekStart   DateTime
+  wins        String?
+  misses      String?
+  commitments String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

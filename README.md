@@ -16,12 +16,6 @@ Required env vars:
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB?sslmode=require"
 ```
 
-Optional but recommended for migrations (unpooled direct connection):
-
-```bash
-DIRECT_URL="postgresql://USER:PASSWORD@HOST:5432/DB?sslmode=require"
-```
-
 ## Quick start (local)
 
 1) Install dependencies
@@ -30,7 +24,7 @@ DIRECT_URL="postgresql://USER:PASSWORD@HOST:5432/DB?sslmode=require"
 npm install
 ```
 
-2) Create `.env` with `DATABASE_URL` (and optionally `DIRECT_URL`) pointing to your Postgres database.
+2) Create `.env` with `DATABASE_URL` pointing to your Postgres database.
 
 3) Generate Prisma client + run local migrations
 
@@ -50,7 +44,7 @@ Open http://localhost:3000
 ## Deployment (Vercel preferred)
 
 1) Provision hosted Postgres (Neon, Supabase, RDS, etc.).
-2) Add `DATABASE_URL` and `DIRECT_URL` in Vercel Project Settings → Environment Variables.
+2) Add `DATABASE_URL` in Vercel Project Settings → Environment Variables.
 3) Ensure migrations run during deploy before serving traffic.
 
 ### Recommended migration step in CI/deploy
@@ -83,7 +77,6 @@ jobs:
       - run: npm run prisma:migrate:deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
 ```
 
 You can run this migration job before your Vercel deployment job (or as a pre-deploy step in your existing CI pipeline).
